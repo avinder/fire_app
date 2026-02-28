@@ -41,8 +41,16 @@
             </div>
             <label>Current Corpus (Lakh)</label>
             <input id="fireCurrentCorpus" type="number" min="0" step="1" value="50" />
-            <label>Monthly Income (Lakh)</label>
-            <input id="fireAnnualInvestment" type="number" min="0" step="0.1" value="2" />
+            <div class="income-row">
+              <div class="income-item">
+                <label>Monthly Income (Lakh)</label>
+                <input id="fireAnnualInvestment" type="number" min="0" step="0.1" value="2" />
+              </div>
+              <div class="income-item">
+                <label>Yearly Salary Hike (%)</label>
+                <input id="fireSalaryHikeRate" type="number" min="0" max="30" step="0.1" value="8" />
+              </div>
+            </div>
             <label>Monthly Expense (Pre-Retirement, Lakh)</label>
             <input id="firePreRetExpense" type="number" min="0" step="0.1" value="1.5" />
             <label>Post-Ret Expense (% of Pre-Ret)</label>
@@ -117,6 +125,6 @@
       <p id="statusMessage" class="status"></p>
     </main>
 
-    <script src="/app.js?v=16"></script>
+    <script src="/app.js?v=17"></script>
   </body>
 </html>

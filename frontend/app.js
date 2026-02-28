@@ -59,13 +59,16 @@ function estimateAnnualExpense(data) {
   return monthlyAverage * 12;
 }
 
-function yearsToTarget(targetCorpus, currentCorpus, annualInvestment, annualReturnRate) {
+function yearsToTarget(targetCorpus, currentCorpus, annualIncome, annualReturnRate, salaryHikeRate) {
   if (currentCorpus >= targetCorpus) return 0;
   let corpus = currentCorpus;
+  let contribution = annualIncome;
   const r = annualReturnRate / 100;
+  const hike = salaryHikeRate / 100;
   for (let year = 1; year <= 100; year += 1) {
-    corpus = corpus * (1 + r) + annualInvestment;
+    corpus = corpus * (1 + r) + contribution;
     if (corpus >= targetCorpus) return year;
+    contribution *= 1 + hike;
   }
   return null;
 }
@@ -81,6 +84,7 @@ function calculateFire() {
   const postRetReturnRate = Number(document.getElementById("firePostRetReturnRate").value || 0);
   const currentCorpusLakh = Number(document.getElementById("fireCurrentCorpus").value || 0);
   const monthlyInvestmentLakh = Number(document.getElementById("fireAnnualInvestment").value || 0);
+  const salaryHikeRate = Number(document.getElementById("fireSalaryHikeRate").value || 0);
   const valueMode = document.getElementById("fireValueMode").value;
   const preRetExpense = preRetExpenseMonthlyLakh * 100000 * 12;
   const postRetExpense = preRetExpense * (postRetExpensePct / 100);
@@ -101,6 +105,7 @@ function calculateFire() {
     preRetExpense <= 0 ||
     retirementAgeInput <= currentAge ||
     lifeExpectancy <= currentAge ||
+    salaryHikeRate < 0 ||
     preRetReturnRate < 0 ||
     postRetReturnRate < 0 ||
     inflationRate < 0
@@ -140,7 +145,13 @@ function calculateFire() {
       postRetExpense * (1 - Math.pow(1 + realPostRetReturn, -retirementYears)) / realPostRetReturn;
   }
 
-  const years = yearsToTarget(fireNumber, currentCorpus, annualInvestment, preRetReturnRate);
+  const years = yearsToTarget(
+    fireNumber,
+    currentCorpus,
+    annualInvestment,
+    preRetReturnRate,
+    salaryHikeRate,
+  );
 
   fireNumberEl.textContent = formatAbsoluteCompact(fireNumber);
   fireYearsEl.textContent = years === null ? "100+ years" : `${years} years`;
@@ -158,6 +169,7 @@ function calculateFire() {
     retirementAge: retirementAgeInput,
     currentCorpus,
     annualInvestment,
+    salaryHikeRate,
     preRetExpense,
     postRetExpense,
     inflationRate,
@@ -182,6 +194,7 @@ function buildFireProjection(params) {
     retirementAge,
     currentCorpus,
     annualInvestment,
+    salaryHikeRate,
     preRetExpense,
     postRetExpense,
     inflationRate,
@@ -192,6 +205,7 @@ function buildFireProjection(params) {
 
   const points = [];
   const inflation = inflationRate / 100;
+  const salaryHike = salaryHikeRate / 100;
   let corpus = currentCorpus;
   const currentYear = new Date().getFullYear();
 
@@ -200,7 +214,9 @@ function buildFireProjection(params) {
     const inflationFactor = Math.pow(1 + inflation, yearOffset);
     const calendarYear = currentYear + yearOffset;
     const isWorking = age < retirementAge;
-    const incomeFuture = isWorking ? annualInvestment * inflationFactor : 0;
+    const incomeGrowthFactor = Math.pow(1 + salaryHike, yearOffset);
+    const annualIncomeForYear = annualInvestment * incomeGrowthFactor;
+    const incomeFuture = isWorking ? annualIncomeForYear : 0;
     const expenseBase = isWorking ? preRetExpense : postRetExpense;
     const expenseFuture = expenseBase * inflationFactor;
 
@@ -215,7 +231,7 @@ function buildFireProjection(params) {
 
     const growthRate = (isWorking ? preRetReturnRate : postRetReturnRate) / 100;
     if (isWorking) {
-      corpus = corpus * (1 + growthRate) + annualInvestment;
+      corpus = corpus * (1 + growthRate) + annualIncomeForYear;
     } else {
       corpus = corpus * (1 + growthRate) - expenseFuture;
     }

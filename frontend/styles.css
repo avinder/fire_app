@@ -428,6 +428,17 @@ th {
   gap: 0.35rem;
 }
 
+.income-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.income-item {
+  display: grid;
+  gap: 0.35rem;
+}
+
 .percent-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -486,6 +497,10 @@ th {
   }
 
   .age-row {
+    grid-template-columns: 1fr;
+  }
+
+  .income-row {
     grid-template-columns: 1fr;
   }
 }
