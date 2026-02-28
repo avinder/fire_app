@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Expenses Dashboard</title>
+    <link rel="stylesheet" href="/styles.css?v=17" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="app">
+      <header class="topbar">
+        <div class="top-left">
+          <div class="logo">FIRE TRACKER</div>
+        </div>
+      </header>
+
+      <div id="firePanel" class="tab-panel active">
+        <section class="hero">
+          <p class="eyebrow">Financial Independence</p>
+          <h1>Plan your financial journey.</h1>
+          <p class="hero-sub">Estimate when you can retire and how much corpus you need to sustain your lifestyle.</p>
+        </section>
+
+        <section class="panel fire-grid">
+          <div class="fire-inputs">
+            <h2>FIRE Inputs</h2>
+            <div class="age-row">
+              <div class="age-item">
+                <label>Current Age</label>
+                <input id="fireCurrentAge" type="number" min="18" max="100" step="1" value="30" />
+              </div>
+              <div class="age-item">
+                <label>Target Retirement Age</label>
+                <input id="fireRetirementAgeInput" type="number" min="30" max="100" step="1" value="45" />
+              </div>
+              <div class="age-item">
+                <label>Life Expectancy</label>
+                <input id="fireLifeExpectancy" type="number" min="40" max="120" step="1" value="85" />
+              </div>
+            </div>
+            <label>Current Corpus (Lakh)</label>
+            <input id="fireCurrentCorpus" type="number" min="0" step="1" value="50" />
+            <label>Monthly Income (Lakh)</label>
+            <input id="fireAnnualInvestment" type="number" min="0" step="0.1" value="2" />
+            <label>Monthly Expense (Pre-Retirement, Lakh)</label>
+            <input id="firePreRetExpense" type="number" min="0" step="0.1" value="1.5" />
+            <label>Post-Ret Expense (% of Pre-Ret)</label>
+            <input id="firePostRetExpensePct" type="number" min="10" max="150" step="1" value="80" />
+            <div class="percent-row">
+              <div class="percent-item">
+                <label>Inflation Rate (%)</label>
+                <input id="fireInflationRate" type="number" min="0" max="20" step="0.1" value="6" />
+              </div>
+              <div class="percent-item">
+                <label>Return (Pre-Retirement, %)</label>
+                <input id="firePreRetReturnRate" type="number" min="0" max="30" step="0.1" value="12" />
+              </div>
+              <div class="percent-item">
+                <label>Return (Post-Retirement, %)</label>
+                <input id="firePostRetReturnRate" type="number" min="0" max="20" step="0.1" value="7" />
+              </div>
+            </div>
+            <button id="calculateFireBtn" type="button">Calculate FIRE</button>
+          </div>
+          <div class="fire-output">
+            <div class="fire-snapshot-head">
+              <h2>FIRE Snapshot</h2>
+              <span class="snapshot-chip">Live Estimate</span>
+            </div>
+            <div id="fireNumberCard" class="fire-number-card">
+              <span>Target Corpus (Today's Value)</span>
+              <strong id="fireNumber">-</strong>
+              <small id="fireReadinessText">Run calculation to see FIRE readiness.</small>
+            </div>
+            <div class="fire-progress-wrap">
+              <div class="fire-progress-labels">
+                <span>Progress to FIRE</span>
+                <strong id="fireProgressPct">0%</strong>
+              </div>
+              <div class="fire-progress-bar">
+                <span id="fireProgressFill"></span>
+              </div>
+            </div>
+            <div class="fire-metric-grid">
+              <div class="fire-metric">
+                <span>Years to FIRE</span>
+                <strong id="fireYears">-</strong>
+              </div>
+              <div class="fire-metric">
+                <span>Monthly Expense (Lakh)</span>
+                <strong id="fireMonthlyExpense">-</strong>
+              </div>
+              <div class="fire-metric">
+                <span>Required at Retirement (Lakh)</span>
+                <strong id="fireRequiredAtRetirement">-</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>FIRE Projection (Absolute, Monthly, Lakh)</h2>
+            <div class="panel-controls">
+              <label for="fireValueMode">Value Mode</label>
+              <select id="fireValueMode" class="level-select">
+                <option value="future">Future Value</option>
+                <option value="present">Present Value</option>
+              </select>
+            </div>
+          </div>
+          <div id="fireProjectionGraph" class="line-graph"></div>
+          <div id="fireProjectionLegend" class="legend"></div>
+        </section>
+      </div>
+      <p id="statusMessage" class="status"></p>
+    </main>
+
+    <script src="/app.js?v=16"></script>
+  </body>
+</html>
