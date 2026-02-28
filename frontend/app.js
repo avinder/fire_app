@@ -31,6 +31,9 @@ function getDefaultApiUrl() {
   if (host === "localhost" || host === "127.0.0.1") {
     return "http://localhost:8000/api/dashboard/expenses";
   }
+  if (host.endsWith("github.io")) {
+    return "https://fire-app.onrender.com/api/dashboard/expenses";
+  }
   return "/api/dashboard/expenses";
 }
 const DEFAULT_API_URL = getDefaultApiUrl();
