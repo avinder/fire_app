@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finance Expenses Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=18" />
+    <link rel="stylesheet" href="styles.css?v=20" />
   </head>
   <body>
     <div class="backdrop"></div>
@@ -55,6 +55,41 @@
             <input id="firePreRetExpense" type="number" min="0" step="0.1" value="1.5" />
             <label>Post-Ret Expense (% of Pre-Ret)</label>
             <input id="firePostRetExpensePct" type="number" min="10" max="150" step="1" value="80" />
+            <div class="kids-row">
+              <div class="kids-item">
+                <label>Number of Kids</label>
+                <select id="fireKidsCount" class="level-select">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+              <div class="kids-item">
+                <label>Kids Expense Inflation (%)</label>
+                <input id="fireKidsInflationRate" type="number" min="0" max="25" step="0.1" value="10" />
+              </div>
+            </div>
+            <div id="kidsBirthAgesContainer" class="kids-birth-grid"></div>
+            <div class="home-grid">
+              <div class="home-item">
+                <label>Home Buy Age</label>
+                <input id="fireHomeBuyAge" type="number" min="18" max="100" step="1" value="36" />
+              </div>
+              <div class="home-item">
+                <label>Home Value Today (Lakh)</label>
+                <input id="fireHomeValueToday" type="number" min="0" step="1" value="100" />
+              </div>
+              <div class="home-item">
+                <label>Downpayment (%)</label>
+                <input id="fireHomeDownPaymentPct" type="number" min="0" max="100" step="1" value="20" />
+              </div>
+              <div class="home-item">
+                <label>Home Loan Interest (%)</label>
+                <input id="fireHomeLoanRate" type="number" min="0" max="20" step="0.1" value="8.5" />
+              </div>
+            </div>
+            <p class="hint home-note">Home value is projected using fixed 8% annual inflation. EMI assumes 20-year loan tenure.</p>
             <div class="percent-row">
               <div class="percent-item">
                 <label>Inflation Rate (%)</label>
@@ -77,8 +112,9 @@
               <span class="snapshot-chip">Live Estimate</span>
             </div>
             <div id="fireNumberCard" class="fire-number-card">
-              <span>Target Corpus (Today's Value)</span>
+              <span>Target Corpus Required at Retirement</span>
               <strong id="fireNumber">-</strong>
+              <small id="fireTodayValue">(Today's Value: -)</small>
               <small id="fireReadinessText">Run calculation to see FIRE readiness.</small>
             </div>
             <div class="fire-progress-wrap">
@@ -92,17 +128,19 @@
             </div>
             <div class="fire-metric-grid">
               <div class="fire-metric">
-                <span>Years to FIRE</span>
+                <span>Time to FIRE</span>
                 <strong id="fireYears">-</strong>
               </div>
               <div class="fire-metric">
                 <span>Monthly Expense (Lakh)</span>
                 <strong id="fireMonthlyExpense">-</strong>
               </div>
-              <div class="fire-metric">
-                <span>Required at Retirement (Lakh)</span>
-                <strong id="fireRequiredAtRetirement">-</strong>
-              </div>
+            </div>
+            <div class="fire-scenario-box">
+              <span class="scenario-title">Scenario Check</span>
+              <p id="fireScenarioFaster">Cut expense by 10%: -</p>
+              <p id="fireScenarioSlower">Increase expense by 10%: -</p>
+              <p id="fireHomeDownPaymentHint">Home downpayment check: -</p>
             </div>
           </div>
         </section>
@@ -125,6 +163,6 @@
       <p id="statusMessage" class="status"></p>
     </main>
 
-    <script src="app.js?v=18"></script>
+    <script src="app.js?v=24"></script>
   </body>
 </html>
