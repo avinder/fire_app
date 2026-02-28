@@ -26,29 +26,17 @@ function formatMonthlyCompactFromAnnual(value) {
 
 let currentDashboardData = null;
 const API_URL_STORAGE_KEY = "finance_api_url";
-const DEFAULT_API_URL = "http://localhost:8000/api/dashboard/expenses";
+function getDefaultApiUrl() {
+  const host = window.location.hostname;
+  if (host === "localhost" || host === "127.0.0.1") {
+    return "http://localhost:8000/api/dashboard/expenses";
+  }
+  return "/api/dashboard/expenses";
+}
+const DEFAULT_API_URL = getDefaultApiUrl();
 
 function renderSummary(data) {
   void data;
-}
-
-function showTab(tabName) {
-  const dashboardPanel = document.getElementById("dashboardPanel");
-  const firePanel = document.getElementById("firePanel");
-  const tabDashboard = document.getElementById("tabDashboard");
-  const tabFire = document.getElementById("tabFire");
-
-  if (tabName === "fire") {
-    dashboardPanel.classList.remove("active");
-    firePanel.classList.add("active");
-    tabDashboard.classList.remove("active");
-    tabFire.classList.add("active");
-  } else {
-    firePanel.classList.remove("active");
-    dashboardPanel.classList.add("active");
-    tabFire.classList.remove("active");
-    tabDashboard.classList.add("active");
-  }
 }
 
 function estimateAnnualExpense(data) {
@@ -589,18 +577,19 @@ async function loadDashboard() {
 function getApiCandidates(apiUrl) {
   let parsed;
   try {
-    parsed = new URL(apiUrl);
+    parsed = new URL(apiUrl, window.location.origin);
   } catch {
     return [apiUrl];
   }
 
   const host = parsed.hostname;
   const isLocal = host === "localhost" || host === "127.0.0.1";
-  if (!isLocal) return [apiUrl];
+  const sameOriginCandidate = `${parsed.protocol}//${host}${parsed.port ? `:${parsed.port}` : ""}${parsed.pathname}${parsed.search}`;
+  if (!isLocal) return [sameOriginCandidate];
 
   const defaultPorts = ["8000", "8001", "8002"];
   const path = `${parsed.pathname}${parsed.search}`;
-  const candidates = [`${parsed.protocol}//${host}:${parsed.port || "8000"}${path}`];
+  const candidates = [sameOriginCandidate];
   for (const p of defaultPorts) {
     const candidate = `${parsed.protocol}//${host}:${p}${path}`;
     if (!candidates.includes(candidate)) candidates.push(candidate);
